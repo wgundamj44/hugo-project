@@ -1,6 +1,6 @@
 ---
 date: 2015-09-30
-title: Some project notes(4)
+title: "Some project notes: Bootstrap of Django"
 categories: [tech]
 tags: [Django]
 ---

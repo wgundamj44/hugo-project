@@ -1,5 +1,5 @@
 ---
-title: "Some project notes(1)"
+title: "Some project notes: Use React and webpack"
 categories: ["tech"]
 date: 2015-08-12
 tags: ["javascript"]

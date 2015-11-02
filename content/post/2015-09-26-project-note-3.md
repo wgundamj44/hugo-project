@@ -1,6 +1,6 @@
 ---
 date: 2015-09-26
-title: Some project notes(3)
+title: "Some project notes: ORM in Django"
 categories: [tech]
 tags: [Django]
 ---

@@ -1,6 +1,6 @@
 ---
 date: 2015-08-13
-title: Some project notes(2)
+title: "Some project notes: Develop enviroment"
 categories: [tech]
 tags: [docker Django]
 ---
