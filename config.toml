@@ -1,0 +1,5 @@
+baseurl = 'http://wgundamj44.github.io/'
+languageCode = "en-us"
+title = "Notes of wgundamj44"
+[params]
+  highlight = "solarized_light"

@@ -1,0 +1,52 @@
+---
+layout: post
+title: About flycheck
+category: [tech]
+tags: [flycheck, emacs]
+---
+Recently I replaced my emacs on-the-fly syntax checker from flymake to flycheck. Flycheck is more well designed so that additional checker can be used without
+introducing into the other plugins.
+
+For PHP development, I used to use php + phpcs, php for syntax check, phpcs for unused variable check. With flymake, it can only use php by default, and need to
+install flymake-php etc. for phpcs. While in flycheck, there's a mechanism called 'next checker', in which additional checker can be defined.
+
+After flycheck is installed, php checker works fine while phpcs does not. So I digged a little further into the source code of flycheck, and found out the reason.
+It turns out that, flycheck will save a copy of the source code to be checked to a tmp folder. In my Mac computer, it is /var/xxx/yyy. This folder is in fact a symbol link
+to /private/var/xxx/yyy/. The output of phpcs use directory name /private/var/xxx, while flycheck assumed the directory name /var/xxx. The flycheck will use ```string=``` tocheck if the origin of
+the error message is the same as the checked file, the file name is obviously different although they refer to the same place.. As a result, the error message will be discarded and no check result will be output.
+My solution is customized the ```temporary-file-directory``` variable to refer to the real directory name instead of the symbol link, and everything works fine. Also, I customized the ```flycheck-phpcs-standard``` to
+specify the standard of phpcs, and ```flycheck-php-phpcs-executable``` to specify the phpcs command path.
+
+## How flycheck works? ##
+
+- Configuration
+
+  - php checker
+
+    ```
+    flycheck-define-checker php
+    ```
+    This says use php to check for error, and after error check is performed check for warnings use phpmd and phpcs.
+
+  - phpcs checker
+
+    ```
+    flycheck-define-checker php-phpcs
+    ```
+    This says that use ```flycheck-phpcs-standard``` to check for warnings.
+    
+  - workflow
+    - flycheck-buffer: checker entry point
+    - flycheck-start-checker: start a checker
+      - flycheck-checker-executable: extract checker command from checker config
+      - flycheck-checker-substitued-arguments: determine the arguments from checker config, also creates temp file for check
+      - flycheck-receive-checker-ouput: collects output of checker
+      - flycheck-handle-signal: deal with output when process finished with some signal
+        - flycheck-finish-syntax-check: finish the check
+          - flycheck-relevant-errors: check if error message belong the current buffer
+          - flycheck-process-error-functions: actually change the buffer display with error messages
+          - next checker: if there's next checker for the buffer, repeat...
+
+
+
+
