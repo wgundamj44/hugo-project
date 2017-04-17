@@ -57,5 +57,16 @@ def method_decorator(decorator):
         return _wrapper
     return _dec
 ```
-Here `func` is decorated function, but it isn't a method (unbound). To make new decorator return a method, the code simulates how instance access method,
-by invoking `__get__` and pass instance as first argument, this way `func` will be converted to a 'bound' method.
+Here `func` is the decorated method, the code simulates how instance access its method by invoking func with `__get__`. This way, `self` will be bind to the first parameter of `func`, and `func` will becomes a "bound method".
+
+The relatioship between function and ubound/bound function can be illustrated as:
+```python
+def test(*args):
+    pass
+class A(object):
+    pass
+a = A()
+test #<function __main__.test>
+test.__get__(a, A) #<bound method A.test of <__main__.A object at 0x7fd1a82638d0>>
+test.__get__(None, A)  #<unbound method A.test>
+```
